@@ -1,116 +1,165 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   AppBar,
   Toolbar,
   Typography,
   Button,
-  Menu,
+  Popper,
+  Paper,
   List,
   ListItem,
   ListItemText,
   Box,
+  ClickAwayListener,
 } from "@mui/material";
 
-const surfboardCategories: Record<string, string[]> = {
-  Chargers: ["Event Horizon", "Quasar", "Gamma Ray Burst", "Super Nova"],
-  Performers: ["Eclipse", "Boson", "Dark Matter", "Singularity"],
-  "Daily Drivers": ["Worm Hole", "Quark", "Electron", "Interstellar"],
-  Longboards: [
-    "Cosmic Microwave Background",
-    "Spiral Galaxy",
-    "Terraform",
-    "Neutrino",
-  ],
-};
+type MenuId = "surfboards" | "hardware" | null;
+
+interface MenuData {
+  id: MenuId;
+  label: string;
+  categories: Record<string, string[]>;
+}
+
+const menus: MenuData[] = [
+  {
+    id: "surfboards",
+    label: "Surfboards",
+    categories: {
+      Chargers: ["Event Horizon", "Quasar", "Gamma Ray Burst", "Super Nova"],
+      Performers: ["Eclipse", "Boson", "Dark Matter", "Singularity"],
+      "Daily Drivers": ["Worm Hole", "Quark", "Electron", "Interstellar"],
+      Longboards: [
+        "Cosmic Microwave Background",
+        "Spiral Galaxy",
+        "Terraform",
+        "Neutrino",
+      ],
+    },
+  },
+  {
+    id: "hardware",
+    label: "Hardware",
+    categories: {
+      Grips: ["Graviton", "Nebula", "Asteroid", "Meteor", "Crator", "Flux"],
+      Fins: [
+        "Atoms",
+        "Nucleus",
+        "Ionosphere",
+        "Plasma",
+        "Flare",
+        "Corona",
+        "Aurora",
+        "Zenith",
+        "Apex",
+        "Vector",
+        "Comet",
+        "Photon",
+      ],
+      Leashes: ["Equinox", "Satellite", "Constellation", "Orbit"],
+    },
+  },
+];
 
 export default function HeaderAppBar() {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [activeMenu, setActiveMenu] = useState<MenuId>(null);
+  const navRef = useRef<HTMLDivElement>(null);
 
-  const handleOpenMainMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  // close menu if mouse leaves AppBar area as well
-  const handleMouseLeaveBar = () => {
-    if (anchorEl) {
-      handleCloseMenu();
-    }
+  const handleOpenMenu = (menuId: MenuId) => {
+    setActiveMenu(menuId);
   };
 
   const handleCloseMenu = () => {
-    setAnchorEl(null);
+    setActiveMenu(null);
   };
 
-  const open = Boolean(anchorEl);
+  const activeMenuData = menus.find((m) => m.id === activeMenu);
 
   return (
-    <AppBar
-      position="static"
-      color="default"
-      elevation={1}
-      onMouseLeave={handleMouseLeaveBar}
-    >
+    <AppBar position="static" color="default" elevation={1}>
       <Toolbar>
         <Typography variant="h6" sx={{ flexGrow: 1 }}>
           Multiverse Surfboards
         </Typography>
 
-        {/* Surfboards Menu */}
-        <Button
-          onMouseEnter={handleOpenMainMenu}
-          color="inherit"
-          aria-controls={open ? "surfboards-menu" : undefined}
-          aria-haspopup="true"
-          aria-expanded={open ? "true" : undefined}
-        >
-          Surfboards
-        </Button>
-        <Menu
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleCloseMenu}
-          anchorOrigin={{ horizontal: "left", vertical: "bottom" }}
-          transformOrigin={{ horizontal: "left", vertical: "top" }}
-          MenuListProps={{ onMouseLeave: handleCloseMenu }}
-          slotProps={{
-            paper: {
-              sx: {
-                px: 2,
-                py: 2,
+        <ClickAwayListener onClickAway={handleCloseMenu}>
+          <Box
+            ref={navRef}
+            onMouseLeave={handleCloseMenu}
+            sx={{ display: "flex" }}
+          >
+            {menus.map((menu) => (
+              <Button
+                key={menu.id}
+                onMouseEnter={() => handleOpenMenu(menu.id)}
+                color="inherit"
+                aria-controls={
+                  activeMenu === menu.id ? `${menu.id}-menu` : undefined
+                }
+                aria-haspopup="true"
+                aria-expanded={activeMenu === menu.id ? "true" : undefined}
+              >
+                {menu.label}
+              </Button>
+            ))}
+
+            <Popper
+              open={Boolean(activeMenu)}
+              anchorEl={navRef.current}
+              placement="bottom-start"
+              disablePortal
+              sx={{
                 width: "100vw",
-                maxWidth: "100vw",
                 left: "0 !important",
                 right: "0 !important",
-                boxShadow: "none",
-              },
-            },
-          }}
-        >
-          <Box sx={{ display: "flex", gap: 4 }}>
-            {Object.entries(surfboardCategories).map(([category, boards]) => (
-              <Box key={category} sx={{ minWidth: 180 }}>
-                <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-                  {category}
-                </Typography>
-                <List dense disablePadding>
-                  {boards.map((board) => (
-                    <ListItem
-                      button
-                      key={board}
-                      onClick={handleCloseMenu}
-                      sx={{ pl: 0 }}
-                    >
-                      <ListItemText primary={board} />
-                    </ListItem>
-                  ))}
-                </List>
-              </Box>
-            ))}
+                // zIndex: 1300,
+              }}
+            >
+              <Paper
+                sx={{
+                  px: 2,
+                  py: 2,
+                  width: "100vw",
+                  // boxShadow: 1,
+                  borderRadius: 0,
+                }}
+                onMouseLeave={handleCloseMenu}
+              >
+                {activeMenuData && (
+                  <Box sx={{ display: "flex", gap: 4 }}>
+                    {Object.entries(activeMenuData.categories).map(
+                      ([category, items]) => (
+                        <Box key={category} sx={{ minWidth: 180 }}>
+                          <Typography
+                            variant="subtitle1"
+                            fontWeight="bold"
+                            gutterBottom
+                          >
+                            {category}
+                          </Typography>
+                          <List dense disablePadding>
+                            {items.map((item) => (
+                              <ListItem
+                                button
+                                key={item}
+                                onClick={handleCloseMenu}
+                                sx={{ pl: 0 }}
+                              >
+                                <ListItemText primary={item} />
+                              </ListItem>
+                            ))}
+                          </List>
+                        </Box>
+                      )
+                    )}
+                  </Box>
+                )}
+              </Paper>
+            </Popper>
           </Box>
-        </Menu>
+        </ClickAwayListener>
       </Toolbar>
     </AppBar>
   );
