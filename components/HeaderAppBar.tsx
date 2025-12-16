@@ -14,6 +14,7 @@ import {
   Box,
   ClickAwayListener,
 } from "@mui/material";
+import { KeyboardArrowDown } from "@mui/icons-material";
 
 type MenuId = "surfboards" | "hardware" | null;
 
@@ -100,6 +101,7 @@ export default function HeaderAppBar() {
                 }
                 aria-haspopup="true"
                 aria-expanded={activeMenu === menu.id ? "true" : undefined}
+                endIcon={<KeyboardArrowDown />}
               >
                 {menu.label}
               </Button>
@@ -128,7 +130,9 @@ export default function HeaderAppBar() {
                 onMouseLeave={handleCloseMenu}
               >
                 {activeMenuData && (
-                  <Box sx={{ display: "flex", gap: 4 }}>
+                  <Box
+                    sx={{ display: "flex", gap: 4, justifyContent: "center" }}
+                  >
                     {Object.entries(activeMenuData.categories).map(
                       ([category, items]) => (
                         <Box key={category} sx={{ minWidth: 180 }}>
