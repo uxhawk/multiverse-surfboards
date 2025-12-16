@@ -29,7 +29,6 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {/* Header */}
-        {/* @ts-expect-error Server Component import warning */}
         <HeaderAppBar />
         {children}
       </body>
