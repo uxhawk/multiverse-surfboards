@@ -9,7 +9,7 @@ import {
   Popper,
   Paper,
   List,
-  ListItem,
+  ListItemButton,
   ListItemText,
   Box,
   ClickAwayListener,
@@ -145,14 +145,13 @@ export default function HeaderAppBar() {
                           </Typography>
                           <List dense disablePadding>
                             {items.map((item) => (
-                              <ListItem
-                                button
+                              <ListItemButton
                                 key={item}
                                 onClick={handleCloseMenu}
                                 sx={{ pl: 0 }}
                               >
                                 <ListItemText primary={item} />
-                              </ListItem>
+                              </ListItemButton>
                             ))}
                           </List>
                         </Box>
