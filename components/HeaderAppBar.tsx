@@ -118,11 +118,11 @@ export default function HeaderAppBar() {
               }}
             >
               <Paper
+                elevation={0}
                 sx={{
                   px: 2,
                   py: 2,
                   width: "100vw",
-                  // boxShadow: 1,
                   borderRadius: 0,
                 }}
                 onMouseLeave={handleCloseMenu}
