@@ -17,11 +17,18 @@ import {
   ListItemText,
   Box,
   ClickAwayListener,
+  Dialog,
+  DialogContent,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from "@mui/material";
 import {
   FavoriteBorder,
   KeyboardArrowDown,
   ShoppingCartOutlined,
+  Menu as MenuIcon,
+  Close,
 } from "@mui/icons-material";
 import { menuData, toSlug } from "../lib/data";
 
@@ -56,6 +63,10 @@ const menus: MenuDataType[] = [
 export default function HeaderAppBar() {
   const [activeMenu, setActiveMenu] = useState<MenuId>(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isSiteMenuOpen, setIsSiteMenuOpen] = useState(false);
+  const [expandedAccordion, setExpandedAccordion] = useState<string | false>(
+    false
+  );
   const navRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -86,6 +97,16 @@ export default function HeaderAppBar() {
     router.push("/cart");
   };
 
+  const handleOpenSiteMenu = () => {
+    setIsSiteMenuOpen(true);
+    setExpandedAccordion(false);
+  };
+
+  const handleCloseSiteMenu = () => {
+    setIsSiteMenuOpen(false);
+    setExpandedAccordion(false);
+  };
+
   const activeMenuData = menus.find((m) => m.id === activeMenu);
 
   return (
@@ -103,7 +124,11 @@ export default function HeaderAppBar() {
             <Box
               ref={navRef}
               onMouseLeave={handleCloseMenu}
-              sx={{ display: "flex", alignItems: "center", gap: 2 }}
+              sx={{
+                display: { xs: "none", lg: "flex" },
+                alignItems: "center",
+                gap: 2,
+              }}
             >
               {menus.map((menu) => (
                 <Button
@@ -200,7 +225,13 @@ export default function HeaderAppBar() {
             </Box>
           </ClickAwayListener>
 
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+            }}
+          >
             <IconButton
               aria-label="wish list"
               color="inherit"
@@ -215,9 +246,96 @@ export default function HeaderAppBar() {
             >
               <ShoppingCartOutlined />
             </IconButton>
+            <IconButton
+              aria-label="site menu"
+              color="inherit"
+              onClick={handleOpenSiteMenu}
+              sx={{ display: { lg: "none" } }}
+            >
+              <MenuIcon />
+            </IconButton>
           </Box>
         </Toolbar>
       </AppBar>
+
+      <Dialog fullScreen open={isSiteMenuOpen} onClose={handleCloseSiteMenu}>
+        <AppBar position="relative" color="default" elevation={0}>
+          <Toolbar>
+            <Typography variant="h6" sx={{ flexGrow: 1 }}>
+              Site Menu
+            </Typography>
+            <IconButton
+              edge="end"
+              color="inherit"
+              onClick={handleCloseSiteMenu}
+              aria-label="close site menu"
+            >
+              <Close />
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+        <DialogContent
+          sx={{
+            py: 4,
+            px: { xs: 2, sm: 4 },
+            maxWidth: 960,
+            mx: "auto",
+            width: "100%",
+          }}
+        >
+          {menus.map((menu) => (
+            <Box key={menu.id} sx={{ mb: 4 }}>
+              <Typography variant="h5" gutterBottom>
+                {menu.label}
+              </Typography>
+              {Object.entries(menu.categories).map(([category, items]) => {
+                const categorySlug = toSlug(category);
+                const panelId = `${menu.id}-${categorySlug}`;
+                return (
+                  <Accordion
+                    key={category}
+                    disableGutters
+                    expanded={expandedAccordion === panelId}
+                    onChange={(_, isExpanded) =>
+                      setExpandedAccordion(isExpanded ? panelId : false)
+                    }
+                  >
+                    <AccordionSummary expandIcon={<KeyboardArrowDown />}>
+                      <Typography fontWeight="bold">{category}</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <List dense>
+                        <ListItemButton
+                          component={Link}
+                          href={`/${categorySlug}`}
+                          onClick={handleCloseSiteMenu}
+                          sx={{ pl: 0 }}
+                        >
+                          <ListItemText primary="View all" />
+                        </ListItemButton>
+                        {items.map((item) => {
+                          const productSlug = toSlug(item);
+                          return (
+                            <ListItemButton
+                              key={item}
+                              component={Link}
+                              href={`/${categorySlug}/${productSlug}`}
+                              onClick={handleCloseSiteMenu}
+                              sx={{ pl: 0 }}
+                            >
+                              <ListItemText primary={item} />
+                            </ListItemButton>
+                          );
+                        })}
+                      </List>
+                    </AccordionDetails>
+                  </Accordion>
+                );
+              })}
+            </Box>
+          ))}
+        </DialogContent>
+      </Dialog>
 
       <Drawer
         anchor="right"
