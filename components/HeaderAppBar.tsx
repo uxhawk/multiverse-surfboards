@@ -19,10 +19,12 @@ import {
   ClickAwayListener,
   Dialog,
   DialogContent,
+  Slide,
   Accordion,
   AccordionSummary,
   AccordionDetails,
 } from "@mui/material";
+import { TransitionProps } from "@mui/material/transitions";
 import {
   FavoriteBorder,
   KeyboardArrowDown,
@@ -39,6 +41,13 @@ interface MenuDataType {
   label: string;
   categories: Record<string, string[]>;
 }
+
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & { children: React.ReactElement },
+  ref: React.Ref<unknown>
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 // Transform menuData into the format needed for the header
 const menus: MenuDataType[] = [
@@ -258,7 +267,12 @@ export default function HeaderAppBar() {
         </Toolbar>
       </AppBar>
 
-      <Dialog fullScreen open={isSiteMenuOpen} onClose={handleCloseSiteMenu}>
+      <Dialog
+        fullScreen
+        open={isSiteMenuOpen}
+        onClose={handleCloseSiteMenu}
+        TransitionComponent={Transition}
+      >
         <AppBar position="relative" color="default" elevation={0}>
           <Toolbar>
             <Typography variant="h6" sx={{ flexGrow: 1 }}>
