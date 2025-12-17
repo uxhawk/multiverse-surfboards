@@ -11,7 +11,7 @@ import {
   Grid,
 } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
-import { Category, Product } from "../lib/data";
+import { Category, Product, menuData } from "../lib/data";
 
 type ProductPageContentProps = {
   category: Category;
@@ -22,11 +22,19 @@ export default function ProductPageContent({
   category,
   product,
 }: ProductPageContentProps) {
+  const parentMenuLabel = menuData[category.parentMenu].label;
+
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Breadcrumbs sx={{ mb: 3 }}>
         <Link href="/" style={{ textDecoration: "none", color: "inherit" }}>
           Home
+        </Link>
+        <Link
+          href={`/${category.parentMenu}`}
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          {parentMenuLabel}
         </Link>
         <Link
           href={`/${category.slug}`}

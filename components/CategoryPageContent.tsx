@@ -11,7 +11,7 @@ import {
   CardActionArea,
   Breadcrumbs,
 } from "@mui/material";
-import { Category } from "../lib/data";
+import { Category, menuData } from "../lib/data";
 
 type CategoryPageContentProps = {
   category: Category;
@@ -20,11 +20,19 @@ type CategoryPageContentProps = {
 export default function CategoryPageContent({
   category,
 }: CategoryPageContentProps) {
+  const parentMenuLabel = menuData[category.parentMenu].label;
+
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Breadcrumbs sx={{ mb: 3 }}>
         <Link href="/" style={{ textDecoration: "none", color: "inherit" }}>
           Home
+        </Link>
+        <Link
+          href={`/${category.parentMenu}`}
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          {parentMenuLabel}
         </Link>
         <Typography color="text.primary">{category.name}</Typography>
       </Breadcrumbs>

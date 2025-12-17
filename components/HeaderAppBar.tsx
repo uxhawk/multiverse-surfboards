@@ -142,7 +142,10 @@ export default function HeaderAppBar() {
               {menus.map((menu) => (
                 <Button
                   key={menu.id}
+                  component={Link}
+                  href={`/${menu.id}`}
                   onMouseEnter={() => handleOpenMenu(menu.id)}
+                  onClick={handleCloseMenu}
                   color="inherit"
                   aria-controls={
                     activeMenu === menu.id ? `${menu.id}-menu` : undefined
@@ -164,7 +167,7 @@ export default function HeaderAppBar() {
                   width: "100vw",
                   left: "0 !important",
                   right: "0 !important",
-                  // zIndex: 1300,
+                  zIndex: 2000,
                 }}
               >
                 <Paper
@@ -174,6 +177,8 @@ export default function HeaderAppBar() {
                     py: 2,
                     width: "100vw",
                     borderRadius: 0,
+                    zIndex: 2000,
+                    boxShadow: "0px 20px 25px rgba(0,0,0,0.18)",
                   }}
                   onMouseLeave={handleCloseMenu}
                 >
@@ -302,6 +307,16 @@ export default function HeaderAppBar() {
               <Typography variant="h5" gutterBottom>
                 {menu.label}
               </Typography>
+              <Button
+                component={Link}
+                href={`/${menu.id}`}
+                onClick={handleCloseSiteMenu}
+                variant="outlined"
+                size="small"
+                sx={{ mb: 2 }}
+              >
+                View all {menu.label.toLowerCase()}
+              </Button>
               {Object.entries(menu.categories).map(([category, items]) => {
                 const categorySlug = toSlug(category);
                 const panelId = `${menu.id}-${categorySlug}`;

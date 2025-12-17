@@ -1,17 +1,19 @@
 // Shared product data and helper functions
 
+export type ParentMenu = "surfboards" | "hardware";
+
 export interface Product {
   name: string;
   slug: string;
   category: string;
   categorySlug: string;
-  parentMenu: "surfboards" | "hardware";
+  parentMenu: ParentMenu;
 }
 
 export interface Category {
   name: string;
   slug: string;
-  parentMenu: "surfboards" | "hardware";
+  parentMenu: ParentMenu;
   products: Product[];
 }
 
@@ -81,7 +83,7 @@ export function getAllProducts(): Product[] {
           slug: toSlug(productName),
           category: categoryName,
           categorySlug: toSlug(categoryName),
-          parentMenu: menuKey as "surfboards" | "hardware",
+          parentMenu: menuKey as ParentMenu,
         });
       }
     }
@@ -102,13 +104,13 @@ export function getAllCategories(): Category[] {
       categories.push({
         name: categoryName,
         slug: categorySlug,
-        parentMenu: menuKey as "surfboards" | "hardware",
+        parentMenu: menuKey as ParentMenu,
         products: productNames.map((name: string) => ({
           name,
           slug: toSlug(name),
           category: categoryName,
           categorySlug,
-          parentMenu: menuKey as "surfboards" | "hardware",
+          parentMenu: menuKey as ParentMenu,
         })),
       });
     }
@@ -120,6 +122,18 @@ export function getAllCategories(): Category[] {
 // Get a specific category by slug
 export function getCategoryBySlug(slug: string): Category | undefined {
   return getAllCategories().find((cat) => cat.slug === slug);
+}
+
+// Get categories for a parent menu (surfboards or hardware)
+export function getCategoriesByParentMenu(parentMenu: ParentMenu): Category[] {
+  return getAllCategories().filter((cat) => cat.parentMenu === parentMenu);
+}
+
+// Get products for a parent menu (surfboards or hardware)
+export function getProductsByParentMenu(parentMenu: ParentMenu): Product[] {
+  return getAllProducts().filter(
+    (product) => product.parentMenu === parentMenu
+  );
 }
 
 // Get a specific product by category and product slug
