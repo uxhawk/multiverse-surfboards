@@ -41,7 +41,7 @@ export default function CategoryPageContent({
 
       <Grid container spacing={3}>
         {category.products.map((product) => (
-          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={product.slug}>
+          <Grid item xs={12} sm={6} md={4} lg={3} key={product.slug}>
             <Card
               sx={{
                 height: "100%",

@@ -103,7 +103,7 @@ export function getAllCategories(): Category[] {
         name: categoryName,
         slug: categorySlug,
         parentMenu: menuKey as "surfboards" | "hardware",
-        products: productNames.map((name) => ({
+        products: productNames.map((name: string) => ({
           name,
           slug: toSlug(name),
           category: categoryName,

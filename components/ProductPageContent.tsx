@@ -47,7 +47,7 @@ export default function ProductPageContent({
       </Button>
 
       <Grid container spacing={4}>
-        <Grid size={{ xs: 12, md: 6 }}>
+        <Grid item xs={12} md={6}>
           <Box
             sx={{
               height: 400,
@@ -64,7 +64,7 @@ export default function ProductPageContent({
           </Box>
         </Grid>
 
-        <Grid size={{ xs: 12, md: 6 }}>
+        <Grid item xs={12} md={6}>
           <Box>
             <Chip
               label={category.name}
