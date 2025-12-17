@@ -367,7 +367,23 @@ export default function HeaderAppBar() {
             py: 3,
           }}
         >
-          <Typography variant="h6">Your cart</Typography>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Typography variant="h6">Your cart</Typography>
+            <IconButton
+              edge="end"
+              aria-label="Close cart"
+              onClick={handleCloseCartDrawer}
+              size="small"
+            >
+              <Close />
+            </IconButton>
+          </Box>
           <Box sx={{ flexGrow: 1 }}>
             <Typography color="text.secondary">
               Cart preview coming soon.
