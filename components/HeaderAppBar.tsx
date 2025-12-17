@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
+import Link from "next/link";
 import {
   AppBar,
   Toolbar,
@@ -15,52 +16,33 @@ import {
   ClickAwayListener,
 } from "@mui/material";
 import { KeyboardArrowDown } from "@mui/icons-material";
+import { menuData, toSlug } from "../lib/data";
 
 type MenuId = "surfboards" | "hardware" | null;
 
-interface MenuData {
+interface MenuDataType {
   id: MenuId;
   label: string;
   categories: Record<string, string[]>;
 }
 
-const menus: MenuData[] = [
+// Transform menuData into the format needed for the header
+const menus: MenuDataType[] = [
   {
     id: "surfboards",
-    label: "Surfboards",
-    categories: {
-      Chargers: ["Event Horizon", "Quasar", "Gamma Ray Burst", "Super Nova"],
-      Performers: ["Eclipse", "Boson", "Dark Matter", "Singularity"],
-      "Daily Drivers": ["Worm Hole", "Quark", "Electron", "Interstellar"],
-      Longboards: [
-        "Cosmic Microwave Background",
-        "Spiral Galaxy",
-        "Terraform",
-        "Neutrino",
-      ],
-    },
+    label: menuData.surfboards.label,
+    categories: menuData.surfboards.categories as unknown as Record<
+      string,
+      string[]
+    >,
   },
   {
     id: "hardware",
-    label: "Hardware",
-    categories: {
-      Grips: ["Graviton", "Nebula", "Asteroid", "Meteor", "Crator", "Flux"],
-      Fins: [
-        "Atoms",
-        "Nucleus",
-        "Ionosphere",
-        "Plasma",
-        "Flare",
-        "Corona",
-        "Aurora",
-        "Zenith",
-        "Apex",
-        "Vector",
-        "Comet",
-        "Photon",
-      ],
-      Leashes: ["Equinox", "Satellite", "Constellation", "Orbit"],
-    },
+    label: menuData.hardware.label,
+    categories: menuData.hardware.categories as unknown as Record<
+      string,
+      string[]
+    >,
   },
 ];
 
@@ -81,9 +63,12 @@ export default function HeaderAppBar() {
   return (
     <AppBar position="static" color="default" elevation={1}>
       <Toolbar>
-        <Typography variant="h6" sx={{ flexGrow: 1 }}>
-          Multiverse Surfboards
-        </Typography>
+        <Link
+          href="/"
+          style={{ textDecoration: "none", color: "inherit", flexGrow: 1 }}
+        >
+          <Typography variant="h6">Multiverse Surfboards</Typography>
+        </Link>
 
         <ClickAwayListener onClickAway={handleCloseMenu}>
           <Box
@@ -134,28 +119,50 @@ export default function HeaderAppBar() {
                     sx={{ display: "flex", gap: 4, justifyContent: "center" }}
                   >
                     {Object.entries(activeMenuData.categories).map(
-                      ([category, items]) => (
-                        <Box key={category} sx={{ minWidth: 180 }}>
-                          <Typography
-                            variant="subtitle1"
-                            fontWeight="bold"
-                            gutterBottom
-                          >
-                            {category}
-                          </Typography>
-                          <List dense disablePadding>
-                            {items.map((item) => (
-                              <ListItemButton
-                                key={item}
-                                onClick={handleCloseMenu}
-                                sx={{ pl: 0 }}
+                      ([category, items]) => {
+                        const categorySlug = toSlug(category);
+                        return (
+                          <Box key={category} sx={{ minWidth: 180 }}>
+                            <Link
+                              href={`/${categorySlug}`}
+                              onClick={handleCloseMenu}
+                              style={{
+                                textDecoration: "none",
+                                color: "inherit",
+                              }}
+                            >
+                              <Typography
+                                variant="subtitle1"
+                                fontWeight="bold"
+                                gutterBottom
+                                sx={{
+                                  "&:hover": {
+                                    color: "primary.main",
+                                  },
+                                }}
                               >
-                                <ListItemText primary={item} />
-                              </ListItemButton>
-                            ))}
-                          </List>
-                        </Box>
-                      )
+                                {category}
+                              </Typography>
+                            </Link>
+                            <List dense disablePadding>
+                              {items.map((item) => {
+                                const productSlug = toSlug(item);
+                                return (
+                                  <ListItemButton
+                                    key={item}
+                                    component={Link}
+                                    href={`/${categorySlug}/${productSlug}`}
+                                    onClick={handleCloseMenu}
+                                    sx={{ pl: 0 }}
+                                  >
+                                    <ListItemText primary={item} />
+                                  </ListItemButton>
+                                );
+                              })}
+                            </List>
+                          </Box>
+                        );
+                      }
                     )}
                   </Box>
                 )}
