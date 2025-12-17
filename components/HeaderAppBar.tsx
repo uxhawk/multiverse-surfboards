@@ -216,7 +216,7 @@ export default function HeaderAppBar() {
                                       component={Link}
                                       href={`/${categorySlug}/${productSlug}`}
                                       onClick={handleCloseMenu}
-                                      sx={{ pl: 0 }}
+                                      sx={{ pl: 2 }}
                                     >
                                       <ListItemText primary={item} />
                                     </ListItemButton>
@@ -323,7 +323,7 @@ export default function HeaderAppBar() {
                           component={Link}
                           href={`/${categorySlug}`}
                           onClick={handleCloseSiteMenu}
-                          sx={{ pl: 0 }}
+                          sx={{ pl: 2 }}
                         >
                           <ListItemText primary="View all" />
                         </ListItemButton>
@@ -335,7 +335,7 @@ export default function HeaderAppBar() {
                               component={Link}
                               href={`/${categorySlug}/${productSlug}`}
                               onClick={handleCloseSiteMenu}
-                              sx={{ pl: 0 }}
+                              sx={{ pl: 2 }}
                             >
                               <ListItemText primary={item} />
                             </ListItemButton>
