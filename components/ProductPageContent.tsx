@@ -37,7 +37,7 @@ export default function ProductPageContent({
           {parentMenuLabel}
         </Link>
         <Link
-          href={`/${category.slug}`}
+          href={`/${category.parentMenu}/${category.slug}`}
           style={{ textDecoration: "none", color: "inherit" }}
         >
           {category.name}
@@ -47,7 +47,7 @@ export default function ProductPageContent({
 
       <Button
         component={Link}
-        href={`/${category.slug}`}
+        href={`/${category.parentMenu}/${category.slug}`}
         startIcon={<ArrowBack />}
         sx={{ mb: 3 }}
       >
@@ -79,7 +79,7 @@ export default function ProductPageContent({
               size="small"
               sx={{ mb: 2 }}
               component={Link}
-              href={`/${category.slug}`}
+              href={`/${category.parentMenu}/${category.slug}`}
               clickable
             />
 

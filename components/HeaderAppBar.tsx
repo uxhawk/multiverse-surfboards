@@ -192,7 +192,7 @@ export default function HeaderAppBar() {
                           return (
                             <Box key={category} sx={{ minWidth: 180 }}>
                               <Link
-                                href={`/${categorySlug}`}
+                                href={`/${activeMenuData.id}/${categorySlug}`}
                                 onClick={handleCloseMenu}
                                 style={{
                                   textDecoration: "none",
@@ -219,7 +219,7 @@ export default function HeaderAppBar() {
                                     <ListItemButton
                                       key={item}
                                       component={Link}
-                                      href={`/${categorySlug}/${productSlug}`}
+                                      href={`/${activeMenuData.id}/${categorySlug}/${productSlug}`}
                                       onClick={handleCloseMenu}
                                       sx={{ pl: 2 }}
                                     >
@@ -336,7 +336,7 @@ export default function HeaderAppBar() {
                       <List dense>
                         <ListItemButton
                           component={Link}
-                          href={`/${categorySlug}`}
+                          href={`/${menu.id}/${categorySlug}`}
                           onClick={handleCloseSiteMenu}
                           sx={{ pl: 2 }}
                         >
@@ -348,7 +348,7 @@ export default function HeaderAppBar() {
                             <ListItemButton
                               key={item}
                               component={Link}
-                              href={`/${categorySlug}/${productSlug}`}
+                              href={`/${menu.id}/${categorySlug}/${productSlug}`}
                               onClick={handleCloseSiteMenu}
                               sx={{ pl: 2 }}
                             >

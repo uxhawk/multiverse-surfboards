@@ -120,8 +120,17 @@ export function getAllCategories(): Category[] {
 }
 
 // Get a specific category by slug
-export function getCategoryBySlug(slug: string): Category | undefined {
-  return getAllCategories().find((cat) => cat.slug === slug);
+export function getCategoryBySlug(
+  slug: string,
+  parentMenu?: ParentMenu
+): Category | undefined {
+  const categories = getAllCategories();
+  const matchWithParent = categories.find(
+    (cat) => cat.slug === slug && (!parentMenu || cat.parentMenu === parentMenu)
+  );
+  if (matchWithParent) return matchWithParent;
+  // Fallback: allow resolving by slug even if parentMenu is mismatched/omitted
+  return categories.find((cat) => cat.slug === slug);
 }
 
 // Get categories for a parent menu (surfboards or hardware)
@@ -139,9 +148,10 @@ export function getProductsByParentMenu(parentMenu: ParentMenu): Product[] {
 // Get a specific product by category and product slug
 export function getProductBySlug(
   categorySlug: string,
-  productSlug: string
+  productSlug: string,
+  parentMenu?: ParentMenu
 ): Product | undefined {
-  const category = getCategoryBySlug(categorySlug);
+  const category = getCategoryBySlug(categorySlug, parentMenu);
   if (!category) return undefined;
   return category.products.find((p) => p.slug === productSlug);
 }
@@ -152,12 +162,18 @@ export function getAllCategorySlugs(): string[] {
 }
 
 // Get all valid category/product slug combinations (for generateStaticParams)
-export function getAllProductPaths(): { category: string; product: string }[] {
-  const paths: { category: string; product: string }[] = [];
+export function getAllProductPaths(): {
+  parentMenu: ParentMenu;
+  category: string;
+  product: string;
+}[] {
+  const paths: { parentMenu: ParentMenu; category: string; product: string }[] =
+    [];
 
   for (const category of getAllCategories()) {
     for (const product of category.products) {
       paths.push({
+        parentMenu: category.parentMenu,
         category: category.slug,
         product: product.slug,
       });
@@ -165,4 +181,15 @@ export function getAllProductPaths(): { category: string; product: string }[] {
   }
 
   return paths;
+}
+
+// Get all valid category paths (for generateStaticParams)
+export function getAllCategoryPaths(): {
+  parentMenu: ParentMenu;
+  category: string;
+}[] {
+  return getAllCategories().map((category) => ({
+    parentMenu: category.parentMenu,
+    category: category.slug,
+  }));
 }

@@ -61,7 +61,7 @@ export default function CategoryPageContent({
             >
               <CardActionArea
                 component={Link}
-                href={`/${category.slug}/${product.slug}`}
+                href={`/${category.parentMenu}/${category.slug}/${product.slug}`}
                 sx={{ height: "100%" }}
               >
                 <Box
